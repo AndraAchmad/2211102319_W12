@@ -1,35 +1,51 @@
-@extends('layout')
-
+<!-- resources/views/people/edit.blade.php -->
+@extends('template')
+@section('title', 'Edit Transfer Pemain')
 @section('content')
-<div class="container mt-4">
-@extends('layout')
+<div class="container py-4" style="max-width: 900px;">
+    <h2 class="mb-3">Edit Transfer Pemain</h2>
 
-@section('content')
-    <h2>Edit Data Mahasiswa</h2>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-    <form action="{{ route('people.update', $person->id) }}" method="POST">
+    <form action="{{ route('people.update', $person->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
         <div class="mb-3">
-            <label>Nama Lengkap</label>
-            <input type="text" name="name" class="form-control" value="{{ $person->name }}" required>
+            <label>Nama Pemain</label>
+            <input type="text" name="name" value="{{ $person->name }}" class="form-control" required>
         </div>
         <div class="mb-3">
-            <label>Nama Panggilan</label>
-            <input type="text" name="nama_panggilan" class="form-control" value="{{ $person->nama_panggilan }}" required>
+            <label>Posisi</label>
+            <input type="text" name="nama_panggilan" value="{{ $person->nama_panggilan }}" class="form-control" required>
         </div>
         <div class="mb-3">
-            <label>NIM</label>
-            <input type="text" name="nim" class="form-control" value="{{ $person->nim }}" required>
+            <label>Nomor Punggung</label>
+            <input type="number" name="nim" value="{{ $person->nim }}" class="form-control" required>
         </div>
         <div class="mb-3">
-            <label>Email</label>
-            <input type="email" name="email" class="form-control" value="{{ $person->email }}" required>
+            <label>Klub Baru</label>
+            <input type="email" name="email" value="{{ $person->email }}" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Ganti Foto Pemain (opsional)</label>
+            <input type="file" name="foto" class="form-control">
+            @if ($person->foto)
+                <p class="mt-2">Foto sekarang:</p>
+                <img src="{{ asset('storage/' . $person->foto) }}" width="100">
+            @endif
         </div>
 
-        <button class="btn btn-primary">Update</button>
+        <button type="submit" class="btn btn-primary">Update</button>
         <a href="{{ route('people.index') }}" class="btn btn-secondary">Batal</a>
     </form>
+</div>
 @endsection
-

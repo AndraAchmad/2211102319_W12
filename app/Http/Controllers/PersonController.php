@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Person;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NotifTransfer;
 
 class PersonController extends Controller
 {
@@ -25,11 +27,22 @@ class PersonController extends Controller
             'nama_panggilan' => 'required',
             'nim' => 'required|numeric',
             'email' => 'required|email',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
-        Person::create($request->all());
+        $data = $request->all();
 
-        return redirect()->route('people.index')->with('success', 'Data berhasil ditambahkan!');
+        if ($request->hasFile('foto')) {
+            $data['foto'] = $request->file('foto')->store('uploads', 'public');
+        }
+
+        $person = Person::create($data);
+
+        // Kirim email ke user
+        Mail::to($person->email)->send(new NotifTransfer($person));
+        dd('email dikirim');
+
+        return redirect()->route('people.index')->with('success', 'Data berhasil disimpan & email terkirim!');
     }
 
     public function edit($id)
@@ -45,10 +58,17 @@ class PersonController extends Controller
             'nama_panggilan' => 'required',
             'nim' => 'required|numeric',
             'email' => 'required|email',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
         $person = Person::findOrFail($id);
-        $person->update($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('foto')) {
+            $data['foto'] = $request->file('foto')->store('uploads', 'public');
+        }
+
+        $person->update($data);
 
         return redirect()->route('people.index')->with('success', 'Data berhasil diperbarui!');
     }

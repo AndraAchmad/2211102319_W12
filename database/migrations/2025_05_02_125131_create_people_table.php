@@ -17,6 +17,7 @@ return new class extends Migration
         $table->string('nama_panggilan');
         $table->string('nim')->unique();
         $table->string('email')->unique();
+        $table->string('foto')->nullable(); // untuk menyimpan nama file foto
         $table->timestamps();
     });
 }
