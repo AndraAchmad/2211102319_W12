@@ -13,29 +13,19 @@ class NotifTransfer extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $person; // <--- TAMBAH INI
-
-    /**
-     * Create a new message instance.
-     */
-    public function __construct(Person $person) // <--- TAMBAH PARAMETER
+    public $person; 
+    public function __construct(Person $person) 
     {
         $this->person = $person;
     }
 
-    /**
-     * Get the message envelope.
-     */
+   
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Notif Transfer: ' . $this->person->name, // opsional, bisa personalisasi
+            subject: 'Notif Transfer: ' . $this->person->name,
         );
     }
-
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content(
